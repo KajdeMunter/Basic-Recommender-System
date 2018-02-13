@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Data_science_assignment
 {
@@ -6,11 +7,9 @@ namespace Data_science_assignment
     {
         // <ArticleID, Rating>
         public Dictionary<int, float> ratings;
-        public int userID;
 
-        public UserPreferences(int userID, Dictionary<int, float> ratings)
+        public UserPreferences(Dictionary<int, float> ratings)
         {
-            this.userID = userID;
             this.ratings = ratings;
         }
 

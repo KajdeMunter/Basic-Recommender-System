@@ -10,20 +10,19 @@ namespace Data_science_assignment
         // Reads the userItem dataset and returns all unique users.
         public int[] getUsers()
         {
-            var users = (from lines in File.ReadAllLines(@"../../userItem.data")
+            var users = (from lines in File.ReadAllLines(@"../../assets/userItem.data")
                        let part = lines.Split(',')
                        select part[0]).Distinct().ToArray();
             return Array.ConvertAll(users, int.Parse);                      
         }
         
-        // Reads the userItem dataset and returns Object[]
+        // Reads the userItem dataset
         public List<string[]> readLines()
         {
-            var line = (from lines in File.ReadAllLines(@"../../userItem.data")
+            var line = (from lines in File.ReadAllLines(@"../../assets/userItem.data")
                         let parts = lines.Split(',')
                         select parts).ToList();
             return line;
         }
-
     }
 }
