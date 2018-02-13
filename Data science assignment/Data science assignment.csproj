@@ -37,6 +37,12 @@
   <ItemGroup>
     <Compile Include="src\Program.cs" />
     <Compile Include="src\DataReader.cs" />
+    <Compile Include="src\algorithms\Context.cs" />
+    <Compile Include="src\algorithms\CosineStrategy.cs" />
+    <Compile Include="src\algorithms\EuclideanStrategy.cs" />
+    <Compile Include="src\algorithms\IStrategy.cs" />
+    <Compile Include="src\algorithms\ManhattanStrategy.cs" />
+    <Compile Include="src\algorithms\PearsonStrategy.cs" />
     <Compile Include="src\UserPreferences.cs" />
   </ItemGroup>
   <ItemGroup>
