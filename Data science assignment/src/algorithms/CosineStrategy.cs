@@ -8,7 +8,7 @@ namespace Data_science_assignment.src.algorithms
 {
     class CosineStrategy : IStrategy
     {
-        public void Execute(Dictionary<int, UserPreferences> rating1, Dictionary<int, UserPreferences> rating2)
+        public Double Execute(UserPreferences rating1, UserPreferences rating2)
         {
             throw new NotImplementedException();
         }

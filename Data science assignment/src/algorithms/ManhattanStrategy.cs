@@ -8,9 +8,21 @@ namespace Data_science_assignment.src.algorithms
 {
     class ManhattanStrategy : IStrategy
     {
-        public void Execute(Dictionary<int, UserPreferences> rating1, Dictionary<int, UserPreferences> rating2)
+        Double result = 0;
+        public Double Execute(UserPreferences rating1, UserPreferences rating2)
         {
-            throw new NotImplementedException();
+            foreach (KeyValuePair<int, float> kvprating1 in rating1.ratings)
+            {
+                foreach(KeyValuePair<int,float> kvprating2 in rating2.ratings)
+                {
+                    if (kvprating1.Key == kvprating2.Key)
+                    {
+                        Double output = Math.Abs(kvprating1.Value - kvprating2.Value);
+                        result += output;
+                    }
+                }
+            }
+            return result;
         }
     }
 }

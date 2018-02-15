@@ -9,10 +9,10 @@ namespace Data_science_assignment.src.algorithms
     class Context
     {
         private IStrategy _strategy;
-        private readonly Dictionary<int, UserPreferences> rating1;
-        private readonly Dictionary<int, UserPreferences> rating2;
+        private readonly UserPreferences rating1;
+        private readonly UserPreferences rating2;
 
-        public Context(IStrategy strategy, Dictionary<int, UserPreferences> rating1, Dictionary<int, UserPreferences> rating2)
+        public Context(IStrategy strategy, UserPreferences rating1, UserPreferences rating2)
         {
             _strategy = strategy;
             this.rating1 = rating1;
@@ -21,7 +21,8 @@ namespace Data_science_assignment.src.algorithms
 
         public void ContextInterface()
         {
-            _strategy.Execute(rating1, rating2);
+            // Print Double output
+            Console.WriteLine(_strategy.Execute(rating1, rating2));
         }
     }
 }
