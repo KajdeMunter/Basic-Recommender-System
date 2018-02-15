@@ -95,7 +95,6 @@ namespace Data_science_assignment
                 }
                 */
             }
-            
         }
     }
 }
