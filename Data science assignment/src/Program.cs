@@ -44,12 +44,12 @@ namespace Data_science_assignment
             {
 
                 // Uncomment to print all user ratings
-                /*
+                
                 foreach (KeyValuePair<int, float> ratings in kvp.Value.ratings)
                 {
                     Console.WriteLine(string.Format("UserID {0} rated {1} a {2}", kvp.Key, ratings.Key, ratings.Value));
                 }
-                */
+                
 
 
                 // Uncomment to print the MANHATTAN distance between every user
@@ -74,16 +74,16 @@ namespace Data_science_assignment
                 */
 
                 
-                // Uncomment to print the MANHATTAN distance between every user
+                // Uncomment to print the PEARSON distance between every user
                 /*
                 foreach (KeyValuePair<int, UserPreferences> kvp2 in userpreferences)
                 {
                     Context context = new Context(new PearsonStrategy(), kvp.Value, kvp2.Value);
-                    Console.WriteLine(string.Format("The Pearson distance between UID {0} and {1} is: ", kvp.Key, kvp2.Key));
+                    Console.WriteLine(string.Format("The Pearson coefficient between UID {0} and {1} is: ", kvp.Key, kvp2.Key));
                     context.ContextInterface();
                 }
                 */
-
+                
                 
                 // Uncomment to print the EUCLIDEAN distance between every user
                 /*
