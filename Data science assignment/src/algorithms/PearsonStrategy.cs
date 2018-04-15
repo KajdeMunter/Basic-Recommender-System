@@ -28,19 +28,12 @@ namespace Data_science_assignment.src.algorithms
                     }
                 }
             }
+
             //Execute the formula for the Pearson coefficient
             numerator = productSum - ((xSum * ySum) / n);
             denominator = Math.Sqrt(xSqr - (xSum * xSum) / n) * Math.Sqrt(ySqr - (ySum * ySum) / n);
             result = numerator / denominator;
             return result;
         }
-/*
-        private Double PearsonFormula(float x, float y)
-        {
-            Double Pearson;
-
-            return Pearson;
-        }
-*/
     }
 }
