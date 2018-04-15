@@ -17,7 +17,7 @@ namespace Data_science_assignment
             int cnt = 0;
 
             // For every unique userID
-            foreach(int userID in reader.getUsers())
+            foreach(int userID in reader.getUsers(@"../../assets/movielens.data"))
             {
                 // Create Dictionary with <ArticleID, Rating>
                 Dictionary<int, float> userRatings = new Dictionary<int, float>();
@@ -29,7 +29,7 @@ namespace Data_science_assignment
                 userpreferences.Add(userID, preferences);
 
                 // For every instance of the unique UserID in all the lines of the dataset
-                foreach (string[] line in reader.readLines()) {
+                foreach (string[] line in reader.readLines(@"../../assets/movielens.data")) {
                     if (Convert.ToInt32(line[0]) == userID)
                     {
                         preferences.addRating(Convert.ToInt32(line[1]), Single.Parse(line[2], CultureInfo.InvariantCulture));
@@ -44,12 +44,12 @@ namespace Data_science_assignment
             {
 
                 // Uncomment to print all user ratings
-                /*
+                
                 foreach (KeyValuePair<int, float> ratings in kvp.Value.ratings)
                 {
                     Console.WriteLine(string.Format("UserID {0} rated {1} a {2}", kvp.Key, ratings.Key, ratings.Value));
                 }
-                */
+                
 
 
                 // Uncomment to print the MANHATTAN distance between every user
