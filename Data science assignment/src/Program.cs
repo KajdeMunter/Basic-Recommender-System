@@ -1,5 +1,6 @@
 ﻿using Data_science_assignment.src.algorithms;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -9,63 +10,62 @@ namespace Data_science_assignment
     {
         static void Main()
         {
-            // Create Dictionary with <UserID, UserPreferences>
-            Dictionary<int, UserPreferences> userpreferences = new Dictionary<int, UserPreferences>();
+            // Create Dictionary with <UserID, UserPreference>
+            // Dictionary<int, UserPreference> userpreferences = new Dictionary<int, UserPreference>();
 
             DataReader reader = new DataReader();
 
-            int cnt = 0;
+            List<UserPreference> preferences = new List<UserPreference>();
 
             // For every unique userID
-            foreach(int userID in reader.getUsers(@"../../assets/movielens.data"))
+            foreach(int userID in reader.getUsers(@"../../assets/userItem.data"))
             {
-                // Create Dictionary with <ArticleID, Rating>
-                Dictionary<int, float> userRatings = new Dictionary<int, float>();
 
-                // Create a new UserPreferences
-                UserPreferences preferences = new UserPreferences(userRatings);
-                
-                // Add userID and UserPreferences to userpreference dictionary
-                userpreferences.Add(userID, preferences);
+                // Create Dictionary with <ArticleID, Rating>
+                SortedDictionary<int, float> userRatings = new SortedDictionary<int, float>();
+
+                // Add a new userPreference to the preference list
+                UserPreference preference = new UserPreference(userID, userRatings);
 
                 // For every instance of the unique UserID in all the lines of the dataset
-                foreach (string[] line in reader.readLines(@"../../assets/movielens.data")) {
+                foreach (string[] line in reader.readLines(@"../../assets/userItem.data"))
+                {
                     if (Convert.ToInt32(line[0]) == userID)
                     {
-                        preferences.addRating(Convert.ToInt32(line[1]), Single.Parse(line[2], CultureInfo.InvariantCulture));
+                        preference.addRating(Convert.ToInt32(line[1]), Single.Parse(line[2], CultureInfo.InvariantCulture));
                     }
                 }
 
-                cnt++;
+                // Add the users preference to the list of all preferences and users
+                preferences.Add(preference);
             }
 
             // For validation
-            foreach (KeyValuePair<int, UserPreferences> kvp in userpreferences)
+            foreach (UserPreference userpref in preferences)
             {
 
                 // Uncomment to print all user ratings
-                
-                foreach (KeyValuePair<int, float> ratings in kvp.Value.ratings)
+
+                foreach (KeyValuePair<int, float> ratings in userpref.ratings)
                 {
-                    Console.WriteLine(string.Format("UserID {0} rated {1} a {2}", kvp.Key, ratings.Key, ratings.Value));
+                    Console.WriteLine($"UserID {userpref.userId} rated {ratings.Key} a {ratings.Value}");
                 }
-                
 
 
                 // Uncomment to print the MANHATTAN distance between every user
                 /*
-                foreach (KeyValuePair<int, UserPreferences> kvp2 in userpreferences)
+                foreach (KeyValuePair<int, UserPreference> kvp2 in userpreferences)
                 {
                     Context context = new Context(new ManhattanStrategy(), kvp.Value, kvp2.Value);
                     Console.WriteLine(string.Format("The Manhattan distance between UID {0} and {1} is: ", kvp.Key, kvp2.Key));
                     context.ContextInterface();
                 }
                 */
-                
+
 
                 // Uncomment to print the COSINE distance between every user
                 /*
-                foreach (KeyValuePair<int, UserPreferences> kvp2 in userpreferences)
+                foreach (KeyValuePair<int, UserPreference> kvp2 in userpreferences)
                 {
                     Context context = new Context(new CosineStrategy(), kvp.Value, kvp2.Value);
                     Console.WriteLine(string.Format("The Cosine distance between UID {0} and {1} is: ", kvp.Key, kvp2.Key));
@@ -73,21 +73,21 @@ namespace Data_science_assignment
                 }
                 */
 
-                
+
                 // Uncomment to print the PEARSON distance between every user
                 /*
-                foreach (KeyValuePair<int, UserPreferences> kvp2 in userpreferences)
+                foreach (KeyValuePair<int, UserPreference> kvp2 in userpreferences)
                 {
                     Context context = new Context(new PearsonStrategy(), kvp.Value, kvp2.Value);
                     Console.WriteLine(string.Format("The Pearson coefficient between UID {0} and {1} is: ", kvp.Key, kvp2.Key));
                     context.ContextInterface();
                 }
                 */
-                
-                
+
+
                 // Uncomment to print the EUCLIDEAN distance between every user
                 /*
-                foreach (KeyValuePair<int, UserPreferences> kvp2 in userpreferences)
+                foreach (KeyValuePair<int, UserPreference> kvp2 in userpreferences)
                 {
                     Context context = new Context(new EuclideanStrategy(), kvp.Value, kvp2.Value);
                     Console.WriteLine(string.Format("The Euclidiean distance between UID {0} and {1} is: ", kvp.Key, kvp2.Key));

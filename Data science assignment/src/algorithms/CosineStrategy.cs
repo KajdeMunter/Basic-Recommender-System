@@ -8,7 +8,7 @@ namespace Data_science_assignment.src.algorithms
 {
     class CosineStrategy : IStrategy
     {
-        public Double Execute(UserPreferences rating1, UserPreferences rating2)
+        public Double Execute(UserPreference rating1, UserPreference rating2)
         {
             float sumOfXmultipliedByY = 0F;
             float sumOfSquaredX = 0F;

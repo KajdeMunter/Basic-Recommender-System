@@ -43,10 +43,13 @@
     <Compile Include="src\algorithms\IStrategy.cs" />
     <Compile Include="src\algorithms\ManhattanStrategy.cs" />
     <Compile Include="src\algorithms\PearsonStrategy.cs" />
-    <Compile Include="src\UserPreferences.cs" />
+    <Compile Include="src\UserPreference.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

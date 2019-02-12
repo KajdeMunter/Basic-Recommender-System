@@ -9,7 +9,7 @@ namespace Data_science_assignment.src.algorithms
     class PearsonStrategy : IStrategy
     {
         Double result, numerator, denominator, productSum, xSum, xSqr, ySqr, ySum, n = 0;
-        public Double Execute(UserPreferences rating1, UserPreferences rating2)
+        public Double Execute(UserPreference rating1, UserPreference rating2)
         {
             foreach (KeyValuePair<int, float> kvprating1 in rating1.ratings)
             {
