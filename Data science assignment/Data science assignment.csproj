@@ -33,9 +33,9 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="config\App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\Program.cs" />
     <Compile Include="src\DataReader.cs" />
     <Compile Include="src\algorithms\Context.cs" />
     <Compile Include="src\algorithms\CosineStrategy.cs" />
@@ -43,12 +43,17 @@
     <Compile Include="src\algorithms\IStrategy.cs" />
     <Compile Include="src\algorithms\ManhattanStrategy.cs" />
     <Compile Include="src\algorithms\PearsonStrategy.cs" />
+    <Compile Include="src\Program.cs" />
     <Compile Include="src\UserPreference.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="ConsoleTables, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ConsoleTables.2.2.0\lib\net40\ConsoleTables.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

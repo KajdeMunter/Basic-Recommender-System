@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using ConsoleTables;
 
 namespace Data_science_assignment
 {
@@ -10,15 +12,13 @@ namespace Data_science_assignment
     {
         static void Main()
         {
-            // Create Dictionary with <UserID, UserPreference>
-            // Dictionary<int, UserPreference> userpreferences = new Dictionary<int, UserPreference>();
-
-            DataReader reader = new DataReader();
+            DataReader reader = new DataReader(@"../../assets/userItem.data", new[] {',', '\t'});
 
             List<UserPreference> preferences = new List<UserPreference>();
+            int[] uniqueUsers = reader.getUnique(0);
 
             // For every unique userID
-            foreach(int userID in reader.getUsers(@"../../assets/userItem.data"))
+            foreach (int userID in uniqueUsers)
             {
 
                 // Create Dictionary with <ArticleID, Rating>
@@ -28,11 +28,12 @@ namespace Data_science_assignment
                 UserPreference preference = new UserPreference(userID, userRatings);
 
                 // For every instance of the unique UserID in all the lines of the dataset
-                foreach (string[] line in reader.readLines(@"../../assets/userItem.data"))
+                foreach (string[] line in reader.readLines())
                 {
                     if (Convert.ToInt32(line[0]) == userID)
                     {
-                        preference.addRating(Convert.ToInt32(line[1]), Single.Parse(line[2], CultureInfo.InvariantCulture));
+                        preference.addRating(Convert.ToInt32(line[1]),
+                            Single.Parse(line[2], CultureInfo.InvariantCulture));
                     }
                 }
 
@@ -40,61 +41,97 @@ namespace Data_science_assignment
                 preferences.Add(preference);
             }
 
-            // For validation
-            foreach (UserPreference userpref in preferences)
+            // Add rating 0 to every article a user has not rated yet
+            foreach (int articleID in reader.getUnique(1))
             {
-
-                // Uncomment to print all user ratings
-
-                foreach (KeyValuePair<int, float> ratings in userpref.ratings)
+                foreach (UserPreference user in preferences)
                 {
-                    Console.WriteLine($"UserID {userpref.userId} rated {ratings.Key} a {ratings.Value}");
+                    if (!user.ratings.Keys.Contains(articleID))
+                    {
+                        user.addRating(articleID, 0);
+                    }
                 }
-
-
-                // Uncomment to print the MANHATTAN distance between every user
-                /*
-                foreach (KeyValuePair<int, UserPreference> kvp2 in userpreferences)
-                {
-                    Context context = new Context(new ManhattanStrategy(), kvp.Value, kvp2.Value);
-                    Console.WriteLine(string.Format("The Manhattan distance between UID {0} and {1} is: ", kvp.Key, kvp2.Key));
-                    context.ContextInterface();
-                }
-                */
-
-
-                // Uncomment to print the COSINE distance between every user
-                /*
-                foreach (KeyValuePair<int, UserPreference> kvp2 in userpreferences)
-                {
-                    Context context = new Context(new CosineStrategy(), kvp.Value, kvp2.Value);
-                    Console.WriteLine(string.Format("The Cosine distance between UID {0} and {1} is: ", kvp.Key, kvp2.Key));
-                    context.ContextInterface();
-                }
-                */
-
-
-                // Uncomment to print the PEARSON distance between every user
-                /*
-                foreach (KeyValuePair<int, UserPreference> kvp2 in userpreferences)
-                {
-                    Context context = new Context(new PearsonStrategy(), kvp.Value, kvp2.Value);
-                    Console.WriteLine(string.Format("The Pearson coefficient between UID {0} and {1} is: ", kvp.Key, kvp2.Key));
-                    context.ContextInterface();
-                }
-                */
-
-
-                // Uncomment to print the EUCLIDEAN distance between every user
-                /*
-                foreach (KeyValuePair<int, UserPreference> kvp2 in userpreferences)
-                {
-                    Context context = new Context(new EuclideanStrategy(), kvp.Value, kvp2.Value);
-                    Console.WriteLine(string.Format("The Euclidiean distance between UID {0} and {1} is: ", kvp.Key, kvp2.Key));
-                    context.ContextInterface();
-                }
-                */
             }
+
+            string q = "What do you want to do? [getAllRatings, Manhattan, Cosine, Pearson, Euclidean, Exit]";
+            string choice;
+           
+            do
+            {
+                choice = askQuestion(q);
+
+                switch(choice)
+                {
+                    case "getallratings":
+                        ConsoleTable table = new ConsoleTable(new ConsoleTableOptions
+                        {
+                            Columns = new[] {"uid"},
+                            EnableCount = false,
+                        });
+
+                        IEnumerable<string> itemstrings =
+                            reader.getUnique(1).Select(i => i.ToString());
+
+                        foreach (string item in itemstrings)
+                        {
+                            table.AddColumn(new[] {"1", "2"});
+                        }
+
+                        foreach (UserPreference userpref in preferences)
+                        {
+                            //ConsoleTable.From(new[] {1, 2, 3, 4, 5, 6, 7}).Write();
+                        }
+
+                        table.Write();
+
+                        break;
+
+                    case "manhattan":
+                        // todo
+                        break;
+
+                    case "cosine":
+                        // todo
+                        break;
+
+                    case "pearson":
+                        // todo
+                        break;
+
+                    case "euclidean":
+                        int uid = Convert.ToInt32(askQuestion($"Please enter the userID you want to compare other users to. Should be one of: " +
+                                                              $"{string.Join(", ", uniqueUsers)}"));
+
+                        UserPreference userToRate;
+
+                        try
+                        {
+                            userToRate = preferences[uid - 1];
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            Console.WriteLine("That is not a valid userID, please try again.");
+                            break;
+                        }
+
+                        foreach (UserPreference preference in preferences)
+                        {
+                            Context context = new Context(new EuclideanStrategy(), userToRate, preference);
+                            Console.WriteLine(
+                                $"The Euclidiean distance between UID {userToRate.userId} and {preference.userId} is: ");
+                            context.ContextInterface();
+                        }
+
+                        break;
+                }
+            }
+            while (choice != "exit");
+        }
+
+        static string askQuestion(string question)
+        {
+                Console.WriteLine(question);
+                return Console.ReadLine().ToLower();
         }
     }
 }
