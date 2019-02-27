@@ -9,20 +9,21 @@ namespace Data_science_assignment.src.algorithms
     class EuclideanStrategy : IStrategy
     {
         Double result = 0;
-        public Double Execute(UserPreference rating1, UserPreference rating2)
+        public Double Execute(UserPreference pref1, UserPreference pref2)
         {
-            foreach (KeyValuePair<int, float> kvprating1 in rating1.ratings)
+            Double result = 0;
+
+            foreach (KeyValuePair<int, float> kvprating1 in pref1.ratings)
             {
-                foreach (KeyValuePair<int, float> kvprating2 in rating2.ratings)
+                foreach (KeyValuePair<int, float> kvprating2 in pref2.ratings)
                 {
-                    if (kvprating1.Key == kvprating2.Key)
+                    if (kvprating1.Key == kvprating2.Key && kvprating1.Value > 0 && kvprating2.Value > 0)
                     {
-                        Double output = Math.Sqrt((kvprating1.Value - kvprating2.Value) * (kvprating1.Value - kvprating2.Value));
-                        result += output;
+                        result += Math.Pow(kvprating1.Value - kvprating2.Value, 2);
                     }
                 }
             }
-            return result;
+            return Math.Sqrt(result);
         }
     }
 }

@@ -43,6 +43,7 @@
     <Compile Include="src\algorithms\IStrategy.cs" />
     <Compile Include="src\algorithms\ManhattanStrategy.cs" />
     <Compile Include="src\algorithms\PearsonStrategy.cs" />
+    <Compile Include="src\PreferenceLoader.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="src\UserPreference.cs" />
   </ItemGroup>

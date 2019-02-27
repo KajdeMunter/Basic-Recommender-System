@@ -8,6 +8,6 @@ namespace Data_science_assignment.src.algorithms
 {
     interface IStrategy
     {
-        Double Execute(UserPreference rating1, UserPreference rating2);
+        Double Execute(UserPreference pref1, UserPreference pref2);
     }
 }

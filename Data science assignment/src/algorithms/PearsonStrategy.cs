@@ -9,11 +9,11 @@ namespace Data_science_assignment.src.algorithms
     class PearsonStrategy : IStrategy
     {
         Double result, numerator, denominator, productSum, xSum, xSqr, ySqr, ySum, n = 0;
-        public Double Execute(UserPreference rating1, UserPreference rating2)
+        public Double Execute(UserPreference pref1, UserPreference pref2)
         {
-            foreach (KeyValuePair<int, float> kvprating1 in rating1.ratings)
+            foreach (KeyValuePair<int, float> kvprating1 in pref1.ratings)
             {
-                foreach (KeyValuePair<int, float> kvprating2 in rating2.ratings)
+                foreach (KeyValuePair<int, float> kvprating2 in pref2.ratings)
                 {
                     if (kvprating1.Key == kvprating2.Key)
                     {

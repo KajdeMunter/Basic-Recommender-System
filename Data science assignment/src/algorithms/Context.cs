@@ -8,21 +8,20 @@ namespace Data_science_assignment.src.algorithms
 {
     class Context
     {
-        private IStrategy _strategy;
-        private readonly UserPreference rating1;
-        private readonly UserPreference rating2;
+        private readonly IStrategy _strategy;
+        private readonly UserPreference _pref1;
+        private readonly UserPreference _pref2;
 
-        public Context(IStrategy strategy, UserPreference rating1, UserPreference rating2)
+        public Context(IStrategy strategy, UserPreference preference1, UserPreference preference2)
         {
             _strategy = strategy;
-            this.rating1 = rating1;
-            this.rating2 = rating2;
+            this._pref1 = preference1;
+            this._pref2 = preference2;
         }
 
-        public void ContextInterface()
+        public double ExecuteStrategy()
         {
-            // Print Double output
-            Console.WriteLine(_strategy.Execute(rating1, rating2));
+            return _strategy.Execute(_pref1, _pref2);
         }
     }
 }
