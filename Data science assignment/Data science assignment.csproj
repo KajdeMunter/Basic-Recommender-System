@@ -37,7 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\DataReader.cs" />
-    <Compile Include="src\algorithms\Context.cs" />
+    <Compile Include="src\algorithms\AlgorithmContext.cs" />
     <Compile Include="src\algorithms\CosineStrategy.cs" />
     <Compile Include="src\algorithms\EuclideanStrategy.cs" />
     <Compile Include="src\algorithms\IStrategy.cs" />

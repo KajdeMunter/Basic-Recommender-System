@@ -8,9 +8,16 @@ namespace Data_science_assignment.src.algorithms
 {
     class PearsonStrategy : IStrategy
     {
-        Double result, numerator, denominator, productSum, xSum, xSqr, ySqr, ySum, n = 0;
+
         public Double Execute(UserPreference pref1, UserPreference pref2)
         {
+            Double productSum = 0.0;
+            Double xSum = 0.0;
+            Double ySum = 0.0;
+            Double xSqr = 0.0;
+            Double ySqr = 0.0;
+            int n = 0;
+
             foreach (KeyValuePair<int, float> kvprating1 in pref1.ratings)
             {
                 foreach (KeyValuePair<int, float> kvprating2 in pref2.ratings)
@@ -21,18 +28,17 @@ namespace Data_science_assignment.src.algorithms
                         productSum += kvprating1.Value * kvprating2.Value;
                         xSum += kvprating1.Value;
                         ySum += kvprating2.Value;
-                        xSqr += kvprating1.Value * kvprating1.Value;
-                        ySqr += kvprating2.Value * kvprating2.Value;
-                        n += 1; 
-                        
+                        xSqr += Math.Pow(kvprating1.Value, 2);
+                        ySqr += Math.Pow(kvprating2.Value, 2);
+                        n += 1;  
                     }
                 }
             }
 
             //Execute the formula for the Pearson coefficient
-            numerator = productSum - ((xSum * ySum) / n);
-            denominator = Math.Sqrt(xSqr - (xSum * xSum) / n) * Math.Sqrt(ySqr - (ySum * ySum) / n);
-            result = numerator / denominator;
+            Double numerator = productSum - ((xSum * ySum) / n);
+            var denominator = Math.Sqrt(xSqr - (xSum * xSum) / n) * Math.Sqrt(ySqr - (ySum * ySum) / n);
+            var result = numerator / denominator;
             return result;
         }
     }

@@ -16,17 +16,28 @@ namespace Data_science_assignment.src
             this._reader = reader;
         }
 
+        /// <summary>
+        /// Returns all unique users
+        /// </summary>
+        /// <returns></returns>
         public int[] GetUniqueUsers()
         {
             return _reader.getUnique(0);
         }
 
+        /// <summary>
+        /// Returns all unique articles
+        /// </summary>
+        /// <returns></returns>
         public int[] GetUniqueArticles()
         {
             return _reader.getUnique(1);
         }
         
-
+        /// <summary>
+        /// Loads all users and their ratings into a List of UserPreferences.
+        /// </summary>
+        /// <returns>A list of all users and their preferences</returns>
         public List<UserPreference> LoadPreferences()
         {
             List<UserPreference> preferences = new List<UserPreference>();

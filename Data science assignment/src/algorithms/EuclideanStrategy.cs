@@ -8,10 +8,9 @@ namespace Data_science_assignment.src.algorithms
 {
     class EuclideanStrategy : IStrategy
     {
-        Double result = 0;
         public Double Execute(UserPreference pref1, UserPreference pref2)
         {
-            Double result = 0;
+            Double result = 0.0;
 
             foreach (KeyValuePair<int, float> kvprating1 in pref1.ratings)
             {
@@ -23,7 +22,7 @@ namespace Data_science_assignment.src.algorithms
                     }
                 }
             }
-            return Math.Sqrt(result);
+            return 1/(1+Math.Sqrt(result));
         }
     }
 }
