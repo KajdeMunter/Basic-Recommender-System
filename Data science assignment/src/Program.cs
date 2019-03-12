@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using ConsoleTables;
 using Data_science_assignment.src;
 
 namespace Data_science_assignment
@@ -37,35 +36,41 @@ namespace Data_science_assignment
                 switch(choice)
                 {
                     case "getallratings":
-                        ConsoleTable table = new ConsoleTable(new ConsoleTableOptions
-                        {
-                            Columns = new[] {"uid"},
-                            EnableCount = false,
-                        });
+                        Console.Write("\t");
 
-                        IEnumerable<string> itemstrings =
-                            uniqueArticles.Select(i => i.ToString());
-
-                        foreach (string item in itemstrings)
+                        foreach (int pid in uniqueArticles)
                         {
-                            table.AddColumn(new[] {"1", "2"});
+                            Console.Write($"{pid}\t");
                         }
 
-                        foreach (UserPreference userpref in preferences)
-                        {
-                            //ConsoleTable.From(new[] {1, 2, 3, 4, 5, 6, 7}).Write();
-                        }
+                        Console.WriteLine();
 
-                        table.Write();
+                        foreach (int uid in uniqueUsers)
+                        {
+                            Console.Write($"ID {uid}\t");
+
+                            foreach (UserPreference pref in preferences)
+                            {
+                                if (pref.userId == uid)
+                                {
+                                    foreach (KeyValuePair<int, float> ratings in pref.ratings)
+                                    {
+                                        Console.Write($"{ratings.Value}\t");
+                                    }
+                                }
+                            }
+
+                            Console.WriteLine();
+                        }
 
                         break;
 
                     case "manhattan":
-                        // todo
+                        HandleResponse(new ManhattanStrategy());
                         break;
 
                     case "cosine":
-                        // todo
+                        HandleResponse(new CosineStrategy());
                         break;
 
                     case "pearson":
@@ -79,6 +84,7 @@ namespace Data_science_assignment
             }
             while (choice != "exit");
 
+            // Asks for a userId and executes the given strategy on that user and all other preferences
             void HandleResponse(IStrategy strategy)
             {
                 UserPreference userToRate;
@@ -93,28 +99,118 @@ namespace Data_science_assignment
                 }
                 catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is FormatException)
                 {
-                    Console.WriteLine("That is not a valid userID, please try again.");
+                    Console.WriteLine("That is not a valid response, please try again.");
                     return;
                 }
 
+                if (AskQuestion("Calculate nearest neighbours? [y\\N] ") == "y")
+                {
+                    NearestNeighbours(userToRate, strategy);
+                }
+                else
+                {
+                    foreach (UserPreference preference in preferences)
+                    {
+                        AlgorithmContext context = new AlgorithmContext(strategy, userToRate, preference);
+
+                        Console.WriteLine(
+                            $"The {choice} similarity between UID {userToRate.userId} and {preference.userId} is: {context.ExecuteStrategy()} ");
+                    }
+                }
+            }
+
+            // Calculates nearest neighbours based on a threshold and amount of neighbours using the given algorithm
+            void NearestNeighbours(UserPreference userToRate, IStrategy strategy)
+            {
+                string thresholdResponse = AskQuestion("Please enter a threshold: ");
+
+                string amountOfNeighboursResponse = AskQuestion("Please enter the amount of neighbours: ");
+
+                double threshold;
+                int k;
+
+                try
+                {
+                    threshold = double.Parse(thresholdResponse, CultureInfo.InvariantCulture.NumberFormat);
+                    k = Convert.ToInt32(amountOfNeighboursResponse);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("That is not a valid response. please try again.");
+                    return;
+                }
+
+                int listcnt = 0;
+
+                // Create a result list with <similarity, UserPreference>
+                SortedDictionary<double, UserPreference> result = new SortedDictionary<double, UserPreference>();
+
                 foreach (UserPreference preference in preferences)
                 {
-                    AlgorithmContext context = new AlgorithmContext(strategy, userToRate, preference);
-                    Console.WriteLine(
-                        $"The {choice} similarity between UID {userToRate.userId} and {preference.userId} is: {context.ExecuteStrategy()} ");
+                    // Don't include user to rate
+                    if (preference.userId != userToRate.userId)
+                    {
+                        double sim = new AlgorithmContext(strategy, userToRate, preference).ExecuteStrategy();
+
+                        Dictionary<int, float> prefwithoutzeroratings = preference.ratings.Where(kvp => kvp.Value > 0)
+                            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+                        Dictionary<int, float> targetwithoutzeroratings = userToRate.ratings.Where(kvp => kvp.Value > 0)
+                            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+                        // if similarity > threshold and userId has rated additional items with respect to target
+                        if (sim > threshold && prefwithoutzeroratings.Keys.ToList()
+                                .Exists(article => !targetwithoutzeroratings.ContainsKey(article)))
+                        {
+
+                            // If the list of neighbours is not full yet
+                            if (listcnt < k)
+                            {
+                                // insert userId and its similarity
+                                result.Add(sim, preference);
+                                ++listcnt;
+                            }
+                            // Else if the list is already full But similarity is greater than the lowest similarity in the list
+                            else
+                            {
+                                KeyValuePair<double, UserPreference> lowestSimilarityUser = result.First();
+
+                                double lowestSimilarity = lowestSimilarityUser.Key;
+
+                                if (sim > lowestSimilarity)
+                                {
+                                    // Replace the neighbour associated to such lowest similarity with userId
+                                    result.Remove(lowestSimilarityUser.Key);
+                                    result.Add(sim, preference);
+                                }
+                            }
+                            // If the neighbours list is full, update the value of the threshold
+                            if (listcnt >= k)
+                            {
+                                // the new threshold is the lowest neighbour similarity
+                                threshold = result.Min(t => t.Key);
+                            }
+                        }
+                    }
+                }
+
+                Console.WriteLine($"The nearest neighbours for UID {userToRate.userId} are: ");
+                foreach (KeyValuePair<double, UserPreference> neighbour in result.Reverse())
+                {
+                    Console.WriteLine($"UID {neighbour.Value.userId} with similarity {neighbour.Key}");
                 }
             }
         }
 
         /// <summary>
-        /// Asks a question to the user and returns a lowercase string
+        /// Asks a question to the user and returns a lowercase, white-space trimmed string
         /// </summary>
-        /// <param name="question">Question to ask</param>
-        /// <returns>Lowercase user input</returns>
+        /// <param name="question">The question to ask</param>
+        /// <returns>Lowercase trimmed user input</returns>
         static string AskQuestion(string question)
         {
-                Console.WriteLine(question);
-                return Console.ReadLine().ToLower();
+            Console.WriteLine(question);
+            return Console.ReadLine().ToLower().Trim();
         }
     }
 }

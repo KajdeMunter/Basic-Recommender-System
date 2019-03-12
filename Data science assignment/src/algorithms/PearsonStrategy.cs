@@ -8,7 +8,6 @@ namespace Data_science_assignment.src.algorithms
 {
     class PearsonStrategy : IStrategy
     {
-
         public Double Execute(UserPreference pref1, UserPreference pref2)
         {
             Double productSum = 0.0;
@@ -22,7 +21,7 @@ namespace Data_science_assignment.src.algorithms
             {
                 foreach (KeyValuePair<int, float> kvprating2 in pref2.ratings)
                 {
-                    if (kvprating1.Key == kvprating2.Key)
+                    if (kvprating1.Key == kvprating2.Key && kvprating1.Value > 0 && kvprating2.Value > 0)
                     {
                         //Prepare the data for the formula
                         productSum += kvprating1.Value * kvprating2.Value;

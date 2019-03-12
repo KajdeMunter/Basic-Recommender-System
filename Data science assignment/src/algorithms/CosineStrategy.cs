@@ -21,7 +21,6 @@ namespace Data_science_assignment.src.algorithms
                     sumOfXmultipliedByY += kvprating1.Value * kvprating2.Value;
                     sumOfSquaredX += kvprating1.Value * kvprating1.Value;
                     sumOfSquaredY += kvprating2.Value * kvprating2.Value;
-
                 }
             }
 
