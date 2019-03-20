@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using Data_science_assignment.src;
@@ -145,6 +146,9 @@ namespace Data_science_assignment
                 // Create a result list with <similarity, UserPreference>
                 SortedDictionary<double, UserPreference> result = new SortedDictionary<double, UserPreference>();
 
+                // Remove unrated items from target
+                Dictionary<int, float> targetwithoutzeroratings = loader.getRatingsWithoutZero(userToRate);
+
                 foreach (UserPreference preference in preferences)
                 {
                     // Don't include user to rate
@@ -152,11 +156,8 @@ namespace Data_science_assignment
                     {
                         double sim = new AlgorithmContext(strategy, userToRate, preference).ExecuteStrategy();
 
-                        Dictionary<int, float> prefwithoutzeroratings = preference.ratings.Where(kvp => kvp.Value > 0)
-                            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-                        Dictionary<int, float> targetwithoutzeroratings = userToRate.ratings.Where(kvp => kvp.Value > 0)
-                            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                        // Remove unrated items from preference
+                        Dictionary<int, float> prefwithoutzeroratings = loader.getRatingsWithoutZero(preference);
 
                         // if similarity > threshold and userId has rated additional items with respect to target
                         if (sim > threshold && prefwithoutzeroratings.Keys.ToList()
@@ -198,6 +199,51 @@ namespace Data_science_assignment
                 foreach (KeyValuePair<double, UserPreference> neighbour in result.Reverse())
                 {
                     Console.WriteLine($"UID {neighbour.Value.userId} with similarity {neighbour.Key}");
+                }
+
+                predictRating(result.Reverse().ToDictionary(kvp => kvp.Key, kvp => kvp.Value), userToRate);
+            }
+
+            void predictRating(Dictionary<double, UserPreference> neighbours, UserPreference targetUser)
+            {
+                double numerator = 0.0;
+                double denominator = 0.0;
+
+                List<UserPreference> neighbourPreferences = new List<UserPreference>();
+
+                foreach (UserPreference pref in neighbours.Values)
+                {
+                    neighbourPreferences.Add(pref);
+                }
+
+                // Get the products all neighbours have rated
+                HashSet<int> targetHashSet = new HashSet<int>(loader.getRatingsWithoutZero(neighbourPreferences.First()).Keys);
+
+                foreach (UserPreference neighbourPreference in neighbours.Values.Skip(1))
+                {
+                    targetHashSet.IntersectWith(loader.getRatingsWithoutZero(neighbourPreference).Keys);
+                }
+
+                List<int> productsInCommon = targetHashSet.ToList();
+
+                // Remove the products that the user has already rated so we have a list of products that we can predict
+                foreach (int pid in loader.getRatingsWithoutZero(targetUser).Keys)
+                {
+                    productsInCommon.Remove(pid);
+                }
+
+                // Predict rating
+                foreach (int pid in productsInCommon)
+                {
+                    double res = 0.0;
+
+                    foreach (KeyValuePair<double, UserPreference> kvp in neighbours)
+                    {
+                        numerator += (kvp.Key * kvp.Value.ratings[pid]);
+                        denominator += kvp.Key;
+                    }
+
+                    Console.WriteLine($"Predicted rating for {pid} is {numerator/denominator}");
                 }
             }
         }

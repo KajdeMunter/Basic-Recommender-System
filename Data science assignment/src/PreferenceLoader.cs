@@ -79,5 +79,15 @@ namespace Data_science_assignment.src
 
             return preferences;
         }
+
+        /// <summary>
+        /// Takes a userpreference and removes all products that are not rated
+        /// </summary>
+        /// <param name="preference"></param>
+        /// <returns></returns>
+        public Dictionary<int, float> getRatingsWithoutZero(UserPreference preference)
+        {
+            return preference.ratings.Where(kvp => kvp.Value > 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
     }
 }
