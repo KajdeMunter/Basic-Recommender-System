@@ -86,10 +86,12 @@ namespace Data_science_assignment
                 {
                     NearestNeighbours nearestNeighbours = new NearestNeighbours(dataAwareAlgorithm);
                     PredictRating predictRating = new PredictRating(dataAwareAlgorithm);
+
                     predictRating.Calculate(nearestNeighbours.Calculate(userToRate, strategy).Reverse().ToDictionary(kvp => kvp.Key, kvp => kvp.Value), userToRate);
                 }
                 else
-                {
+                { 
+                    // Show all users with their respective similarity to the target user
                     foreach (UserPreference preference in preferences)
                     {
                         AlgorithmContext context = new AlgorithmContext(strategy, userToRate, preference);
