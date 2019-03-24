@@ -62,6 +62,7 @@ namespace Data_science_assignment
             }
             while (choice != "exit");
 
+
             // Asks for a userId and executes the given strategy on that user and all other preferences
             void HandleResponse(IStrategy strategy)
             {
@@ -84,7 +85,8 @@ namespace Data_science_assignment
                 if (Utils.AskQuestion("Calculate nearest neighbours and predict rating? [y\\N] ") == "y")
                 {
                     NearestNeighbours nearestNeighbours = new NearestNeighbours(dataAwareAlgorithm);
-                    predictRating(nearestNeighbours.Calculate(userToRate, strategy).Reverse().ToDictionary(kvp => kvp.Key, kvp => kvp.Value), userToRate);
+                    PredictRating predictRating = new PredictRating(dataAwareAlgorithm);
+                    predictRating.Calculate(nearestNeighbours.Calculate(userToRate, strategy).Reverse().ToDictionary(kvp => kvp.Key, kvp => kvp.Value), userToRate);
                 }
                 else
                 {
@@ -98,48 +100,6 @@ namespace Data_science_assignment
                 }
             }
 
-            void predictRating(Dictionary<double, UserPreference> neighbours, UserPreference targetUser)
-            {
-                double numerator = 0.0;
-                double denominator = 0.0;
-
-                List<UserPreference> neighbourPreferences = new List<UserPreference>();
-
-                foreach (UserPreference pref in neighbours.Values)
-                {
-                    neighbourPreferences.Add(pref);
-                }
-
-                // Get the products all neighbours have rated
-                HashSet<int> targetHashSet = new HashSet<int>(loader.getRatingsWithoutZero(neighbourPreferences.First()).Keys);
-
-                foreach (UserPreference neighbourPreference in neighbours.Values.Skip(1))
-                {
-                    targetHashSet.IntersectWith(loader.getRatingsWithoutZero(neighbourPreference).Keys);
-                }
-
-                List<int> productsInCommon = targetHashSet.ToList();
-
-                // Remove the products that the user has already rated so we have a list of products that we can predict
-                foreach (int pid in loader.getRatingsWithoutZero(targetUser).Keys)
-                {
-                    productsInCommon.Remove(pid);
-                }
-
-                // Predict rating
-                foreach (int pid in productsInCommon)
-                {
-                    double res = 0.0;
-
-                    foreach (KeyValuePair<double, UserPreference> kvp in neighbours)
-                    {
-                        numerator += (kvp.Key * kvp.Value.ratings[pid]);
-                        denominator += kvp.Key;
-                    }
-
-                    Console.WriteLine($"Predicted rating for {pid} is {numerator/denominator}");
-                }
-            }
         }
     }
 }
