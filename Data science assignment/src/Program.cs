@@ -40,33 +40,7 @@ namespace Data_science_assignment
                 switch(choice)
                 {
                     case "getallratings":
-                        Console.Write("\t");
-
-                        foreach (int pid in uniqueArticles)
-                        {
-                            Console.Write($"{pid}\t");
-                        }
-
-                        Console.WriteLine();
-
-                        foreach (int uid in uniqueUsers)
-                        {
-                            Console.Write($"ID {uid}\t");
-
-                            foreach (UserPreference pref in preferences)
-                            {
-                                if (pref.userId == uid)
-                                {
-                                    foreach (KeyValuePair<int, float> ratings in pref.ratings)
-                                    {
-                                        Console.Write($"{ratings.Value}\t");
-                                    }
-                                }
-                            }
-
-                            Console.WriteLine();
-                        }
-
+                        Utils.printRatings(uniqueArticles, uniqueUsers, preferences);
                         break;
 
                     case "manhattan":

@@ -47,7 +47,7 @@
     <Compile Include="src\PreferenceLoader.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="src\UserPreference.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="src\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\" />

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Data_science_assignment
 {
-    class UserPreference
+    public class UserPreference
     {
         public int userId { get; }
 
