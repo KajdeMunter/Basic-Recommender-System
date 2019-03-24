@@ -35,6 +35,8 @@
     <None Include="config\App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\algorithms\DataAwareAlgorithm.cs" />
+    <Compile Include="src\algorithms\NearestNeighbours.cs" />
     <Compile Include="src\DataReader.cs" />
     <Compile Include="src\algorithms\AlgorithmContext.cs" />
     <Compile Include="src\algorithms\CosineStrategy.cs" />
@@ -45,6 +47,7 @@
     <Compile Include="src\PreferenceLoader.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="src\UserPreference.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\" />
