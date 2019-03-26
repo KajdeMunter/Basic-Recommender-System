@@ -8,7 +8,7 @@ namespace Data_science_assignment
     /// <summary>
     /// Class used for reading datasets in different ways
     /// </summary>
-    class DataReader
+    public class DataReader
     {
         private readonly string _dataset;
         private readonly char[] _delimiters;

@@ -25,7 +25,7 @@ namespace Data_science_assignment.src
         /// <param name="uniqueArticles"></param>
         /// <param name="uniqueUsers"></param>
         /// <param name="preferences"></param>
-        public static void printRatings(int[] uniqueArticles, int[] uniqueUsers, List<UserPreference> preferences)
+        public static void PrintRatings(int[] uniqueArticles, int[] uniqueUsers, List<UserPreference> preferences)
         {
             Console.Write("\t");
 
@@ -53,6 +53,49 @@ namespace Data_science_assignment.src
 
                 Console.WriteLine();
             }
+        }
+
+        /// <summary>
+        /// Computes sparcity from data
+        /// </summary>
+        /// <param name="preferences"></param>
+        /// <param name="uniqueUsers"></param>
+        /// <param name="uniqueArticles"></param>
+        /// <param name="loader"></param>
+        /// <returns></returns>
+        public static double ComputeSparcity(List<UserPreference> preferences, int[] uniqueUsers, int[] uniqueArticles, PreferenceLoader loader)
+        {
+            double amountOfRatings = 0;
+            foreach (UserPreference pref in preferences)
+            {
+                amountOfRatings += loader.getRatingsWithoutZero(pref).Count;
+            }
+
+            return 1 - amountOfRatings / (preferences.Count * uniqueArticles.Length);
+        }
+
+        /// <summary>
+        /// Normalize a rating from rmin, rmax into -1, 1
+        /// </summary>
+        /// <param name="r">Denoramlized Rating</param>
+        /// <param name="rmin">Minimum rating to normalize to</param>
+        /// <param name="rmax">Maximum rating to normalize to</param>
+        /// <returns></returns>
+        public static double Normalize(double r, int rmin, int rmax)
+        {
+            return 2 * ((r - rmin) / (rmax - rmin)) - 1;
+        }
+
+        /// <summary>
+        /// Denormalize a rating from -1, 1 to rmin, rmax
+        /// </summary>
+        /// <param name="r">Normalized rating</param>
+        /// <param name="rmin"></param>
+        /// <param name="rmax"></param>
+        /// <returns></returns>
+        public static double Denormalize(double r, int rmin, int rmax)
+        {
+            return ((r + 1) / 2) * (rmax - rmin) + rmin;
         }
     }
 }

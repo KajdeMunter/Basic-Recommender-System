@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Data_science_assignment.src
 {
-    class PreferenceLoader
+    public class PreferenceLoader
     {
         private readonly DataReader _reader;
 
@@ -88,6 +88,16 @@ namespace Data_science_assignment.src
         public Dictionary<int, float> getRatingsWithoutZero(UserPreference preference)
         {
             return preference.ratings.Where(kvp => kvp.Value > 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        /// <summary>
+        /// Returns only the items a userpreference has not rated yet
+        /// </summary>
+        /// <param name="preference"></param>
+        /// <returns></returns>
+        public Dictionary<int, float> getUnratedItems(UserPreference preference)
+        {
+            return preference.ratings.Where(kvp => kvp.Value <= 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
     }
 }

@@ -19,8 +19,19 @@ namespace Data_science_assignment
         /// </summary>
         private static void Main()
         {
-            // Setup vars
-            DataReader reader = new DataReader(@"../../assets/userItem.data", new[] {',', '\t'});
+
+            // Setup variables
+            DataReader reader;
+
+            if (Utils.AskQuestion("Choose dataset size: [S/L]") == "s")
+            {
+                reader = new DataReader(@"../../assets/userItem.data", new[] {','});
+            }
+            else
+            {
+                reader = new DataReader(@"../../assets/movielens.data", new[] {'\t'});
+            }
+
             PreferenceLoader loader = new PreferenceLoader(reader);
 
             List<UserPreference> preferences = loader.LoadPreferences();
@@ -28,8 +39,7 @@ namespace Data_science_assignment
             int[] uniqueArticles = loader.GetUniqueArticles();
             DataAwareAlgorithm dataAwareAlgorithm = new DataAwareAlgorithm(preferences, uniqueUsers, uniqueArticles, loader);
 
-
-            string q = "What do you want to do? [getAllRatings, Manhattan, Cosine, Pearson, Euclidean, Exit]";
+            string q = "What do you want to do? [getAllRatings|Sparcity|Manhattan|Cosine|Pearson|Euclidean|AdjCosine|Exit]";
             string choice;
            
             // Gets user input and executes corresponding user choice
@@ -40,9 +50,11 @@ namespace Data_science_assignment
                 switch(choice)
                 {
                     case "getallratings":
-                        Utils.printRatings(uniqueArticles, uniqueUsers, preferences);
+                        Utils.PrintRatings(uniqueArticles, uniqueUsers, preferences);
                         break;
-
+                    case "sparcity":
+                        Console.WriteLine($"The sparcity is: {Utils.ComputeSparcity(preferences, uniqueUsers, uniqueArticles, loader)}");
+                        break;
                     case "manhattan":
                         HandleResponse(new ManhattanStrategy());
                         break;
@@ -57,6 +69,32 @@ namespace Data_science_assignment
 
                     case "euclidean":
                         HandleResponse(new EuclideanStrategy());
+                        break;
+                    case "adjcosine":
+                        AdjustedCosine adjCosine = new AdjustedCosine(dataAwareAlgorithm);
+
+                        string uidResponse = Utils.AskQuestion(
+                            $"Please enter the userID you want to predict the rating for. Should be one of: " +
+                            $"{string.Join(", ", uniqueUsers)}");
+
+                        UserPreference userToRate;
+                        try
+                        {
+                            int uid = Convert.ToInt32(uidResponse);
+                            userToRate = preferences[uid - 1];
+                        }
+                        catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is FormatException)
+                        {
+                            Console.WriteLine("That is not a valid response, please try again.");
+                            return;
+                        }
+
+                        // For every item the user has not rated yet
+                        foreach (int pid in loader.getUnratedItems(userToRate).Keys)
+                        {
+                            Console.WriteLine($"Predicted rating for item {pid} is: {adjCosine.PredictRating(userToRate, pid)}");
+                        }
+
                         break;
                 }
             }
@@ -101,7 +139,6 @@ namespace Data_science_assignment
                     }
                 }
             }
-
         }
     }
 }

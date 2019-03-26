@@ -19,8 +19,8 @@ namespace Data_science_assignment.src.algorithms
                 foreach (KeyValuePair<int, float> kvprating2 in pref2.ratings)
                 {
                     sumOfXmultipliedByY += kvprating1.Value * kvprating2.Value;
-                    sumOfSquaredX += kvprating1.Value * kvprating1.Value;
-                    sumOfSquaredY += kvprating2.Value * kvprating2.Value;
+                    sumOfSquaredX += (kvprating1.Value * kvprating1.Value);
+                    sumOfSquaredY += (kvprating2.Value * kvprating2.Value);
                 }
             }
 

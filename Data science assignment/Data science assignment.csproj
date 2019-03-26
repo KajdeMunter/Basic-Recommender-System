@@ -35,6 +35,7 @@
     <None Include="config\App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\algorithms\AdjustedCosine.cs" />
     <Compile Include="src\algorithms\DataAwareAlgorithm.cs" />
     <Compile Include="src\algorithms\NearestNeighbours.cs" />
     <Compile Include="src\algorithms\PredictRating.cs" />
