@@ -39,7 +39,7 @@ namespace Data_science_assignment
             int[] uniqueArticles = loader.GetUniqueArticles();
             DataAwareAlgorithm dataAwareAlgorithm = new DataAwareAlgorithm(preferences, uniqueUsers, uniqueArticles, loader);
 
-            string q = "What do you want to do? [getAllRatings|Sparcity|Manhattan|Cosine|Pearson|Euclidean|AdjCosine|Exit]";
+            string q = "What do you want to do? [getAllRatings|Sparcity|Manhattan|Cosine|Pearson|Euclidean|AdjCosine|SlopeOne|Exit]";
             string choice;
            
             // Gets user input and executes corresponding user choice
@@ -95,6 +95,10 @@ namespace Data_science_assignment
                             Console.WriteLine($"Predicted rating for item {pid} is: {adjCosine.PredictRating(userToRate, pid)}");
                         }
 
+                        break;
+                    case "slopeone":
+                        SlopeOne slopeOne = new SlopeOne(dataAwareAlgorithm);
+                        slopeOne.PrintDeviations();
                         break;
                 }
             }

@@ -39,6 +39,7 @@
     <Compile Include="src\algorithms\DataAwareAlgorithm.cs" />
     <Compile Include="src\algorithms\NearestNeighbours.cs" />
     <Compile Include="src\algorithms\PredictRating.cs" />
+    <Compile Include="src\algorithms\SlopeOne.cs" />
     <Compile Include="src\DataReader.cs" />
     <Compile Include="src\algorithms\AlgorithmContext.cs" />
     <Compile Include="src\algorithms\CosineStrategy.cs" />

@@ -33,19 +33,21 @@ namespace Data_science_assignment.src.algorithms
             double x2 = 0.0;
 
             // For every user that rated both items
-            foreach (UserPreference pref in _data.preferences)
+            foreach (UserPreference preference in _data.preferences)
             {
-                if (pref.ratings.ContainsKey(i) && pref.ratings.ContainsKey(j))
+                Dictionary<int, float> pref = _data.loader.getRatingsWithoutZero(preference);
+
+                if (pref.ContainsKey(i) && pref.ContainsKey(j))
                 {
                     // Numerator:
                     // multiply the adjusted rating of those two items and sum the results
-                    double avgRating = pref.ratings.Values.Average();
-                    numerator += (pref.ratings[i] - avgRating) * (pref.ratings[j] - avgRating);
+                    double avgRating = pref.Values.Average();
+                    numerator += (pref[i] - avgRating) * (pref[j] - avgRating);
 
                     // Denumerator:
                     // Sum the squares of all the adjusted ratings for item i and j and take the square root of that result
-                    x1 += Math.Pow(pref.ratings[i] - avgRating, 2);
-                    x2 += Math.Pow(pref.ratings[j] - avgRating, 2);
+                    x1 += Math.Pow(pref[i] - avgRating, 2);
+                    x2 += Math.Pow(pref[j] - avgRating, 2);
                 }
             }
 
