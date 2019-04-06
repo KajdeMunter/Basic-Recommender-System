@@ -15,6 +15,11 @@ namespace Data_science_assignment.src.algorithms
             this._data = data;
         }
 
+        /// <summary>
+        /// Predict a rating based on the nearest neighbours
+        /// </summary>
+        /// <param name="neighbours"></param>
+        /// <param name="targetUser"></param>
         public void Calculate(Dictionary<double, UserPreference> neighbours, UserPreference targetUser)
         {
             double numerator = 0.0;

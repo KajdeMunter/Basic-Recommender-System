@@ -56,57 +56,84 @@ namespace Data_science_assignment
                         Console.WriteLine($"The sparcity is: {Utils.ComputeSparcity(preferences, uniqueUsers, uniqueArticles, loader)}");
                         break;
                     case "manhattan":
-                        HandleResponse(new ManhattanStrategy());
+                        HandleStrategyResponse(new ManhattanStrategy());
                         break;
 
                     case "cosine":
-                        HandleResponse(new CosineStrategy());
+                        HandleStrategyResponse(new CosineStrategy());
                         break;
 
                     case "pearson":
-                        HandleResponse(new PearsonStrategy());
+                        HandleStrategyResponse(new PearsonStrategy());
                         break;
 
                     case "euclidean":
-                        HandleResponse(new EuclideanStrategy());
+                        HandleStrategyResponse(new EuclideanStrategy());
                         break;
                     case "adjcosine":
-                        AdjustedCosine adjCosine = new AdjustedCosine(dataAwareAlgorithm);
-
-                        string uidResponse = Utils.AskQuestion(
-                            $"Please enter the userID you want to predict the rating for. Should be one of: " +
-                            $"{string.Join(", ", uniqueUsers)}");
-
-                        UserPreference userToRate;
-                        try
-                        {
-                            int uid = Convert.ToInt32(uidResponse);
-                            userToRate = preferences[uid - 1];
-                        }
-                        catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is FormatException)
-                        {
-                            Console.WriteLine("That is not a valid response, please try again.");
-                            return;
-                        }
-
-                        // For every item the user has not rated yet
-                        foreach (int pid in loader.getUnratedItems(userToRate).Keys)
-                        {
-                            Console.WriteLine($"Predicted rating for item {pid} is: {adjCosine.PredictRating(userToRate, pid)}");
-                        }
-
+                        HandleAdjCosine(new AdjustedCosine(dataAwareAlgorithm));
                         break;
                     case "slopeone":
-                        SlopeOne slopeOne = new SlopeOne(dataAwareAlgorithm);
-                        slopeOne.PrintDeviations();
+                        HandleSlopeOne(new SlopeOne(dataAwareAlgorithm));
                         break;
                 }
             }
             while (choice != "exit");
 
+            void HandleSlopeOne(SlopeOne slopeOne)
+            {
+                slopeOne.PrintDeviations();
+
+                string uidResponse = Utils.AskQuestion(
+                    $"Please enter the userID you want to predict the rating for. Should be one of: " +
+                    $"{string.Join(", ", uniqueUsers)}");
+
+                UserPreference userToRate;
+                try
+                {
+                    int uid = Convert.ToInt32(uidResponse);
+                    userToRate = preferences[uid - 1];
+                }
+                catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is FormatException)
+                {
+                    Console.WriteLine("That is not a valid response, please try again.");
+                    return;
+                }
+
+                // For every item the user has not rated yet
+                foreach (int pid in loader.getUnratedItems(userToRate).Keys)
+                {
+                    Console.WriteLine($"Predicted rating for item {pid} is: {slopeOne.PredictRating(userToRate, pid)}");
+                }
+            }
+
+            void HandleAdjCosine(AdjustedCosine adjCosine)
+            {
+                string uidResponse = Utils.AskQuestion(
+                    $"Please enter the userID you want to predict the rating for. Should be one of: " +
+                    $"{string.Join(", ", uniqueUsers)}");
+
+                UserPreference userToRate;
+                try
+                {
+                    int uid = Convert.ToInt32(uidResponse);
+                    userToRate = preferences[uid - 1];
+                }
+                catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is FormatException)
+                {
+                    Console.WriteLine("That is not a valid response, please try again.");
+                    return;
+                }
+
+                // For every item the user has not rated yet
+                foreach (int pid in loader.getUnratedItems(userToRate).Keys)
+                {
+                    Console.WriteLine($"Predicted rating for item {pid} is: {adjCosine.PredictRating(userToRate, pid)}");
+                }
+            }
 
             // Asks for a userId and executes the given strategy on that user and all other preferences
-            void HandleResponse(IStrategy strategy)
+            void HandleStrategyResponse(IStrategy strategy)
             {
                 UserPreference userToRate;
 

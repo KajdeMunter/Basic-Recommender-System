@@ -21,12 +21,12 @@ namespace Data_science_assignment.src.algorithms
         }
 
         /// <summary>
-        /// Returns the deviation for two products
+        /// Returns a tuple containing the deviation for 2 products and howManyUsers
         /// </summary>
         /// <param name="i"></param>
         /// <param name="j"></param>
-        /// <returns></returns>
-        public float GetDeviation(int i, int j)
+        /// <returns>a tuple containing the deviation for 2 products and howManyUsers</returns>
+        public Tuple<float,int> GetDeviation(int i, int j)
         {
             float Currdev = 0;
             int usercnt = 0;
@@ -44,7 +44,9 @@ namespace Data_science_assignment.src.algorithms
             }
 
             // Currdev / (How many users rated both I and J)
-            return Currdev / usercnt;
+            float dev = Currdev / usercnt;
+
+            return new Tuple<float, int>(dev, usercnt);
         }
 
         /// <summary>
@@ -67,7 +69,7 @@ namespace Data_science_assignment.src.algorithms
 
                 foreach (int pid2 in _data.uniqueArticles)
                 {
-                    Console.Write($"{Math.Round(GetDeviation(pid1, pid2))} \t");
+                    Console.Write($"{Math.Round(GetDeviation(pid1, pid2).Item1)} \t");
                 }
 
                 Console.WriteLine();
@@ -82,7 +84,24 @@ namespace Data_science_assignment.src.algorithms
         /// <returns></returns>
         public double PredictRating(UserPreference target, int i)
         {
-            return 0;
+            double numerator = 0;
+            double denominator = 0;
+
+            // foreach item j that target has already rated
+            foreach (KeyValuePair<int, float> kvp in _data.loader.getRatingsWithoutZero(target))
+            {
+                // Extract info about deviation between i and j (Deviation and howManyUsers)
+                Tuple<float, int> deviationInfo = GetDeviation(i, kvp.Key);
+                float deviation = deviationInfo.Item1;
+                int howManyUsers = deviationInfo.Item2;
+
+                // numerator += (rating of u for j + deviation between i and j) * (howManyUsers)
+                numerator += (kvp.Value + deviation) * howManyUsers;
+
+                denominator += howManyUsers;
+            }
+
+            return numerator / denominator;
         }
     }
 }
