@@ -33,7 +33,7 @@ namespace Data_science_assignment
         {
             var users = (from lines in File.ReadAllLines(_dataset)
                          let part = lines.Split(_delimiters)
-                         orderby part[index]
+                         orderby Int32.Parse(part[index])
                          select part[index]).Distinct().ToArray();
             return Array.ConvertAll(users, int.Parse);                      
         }

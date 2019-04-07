@@ -66,7 +66,7 @@ namespace Data_science_assignment.src
             }
 
             // Add rating 0 to every article a user has not rated yet
-            foreach (int articleID in _reader.getUnique(1))
+            foreach (int articleID in GetUniqueArticles())
             {
                 foreach (UserPreference user in preferences)
                 {

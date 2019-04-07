@@ -1,11 +1,7 @@
 ﻿using Data_science_assignment.src.algorithms;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
 using Data_science_assignment.src;
 
 namespace Data_science_assignment
@@ -20,12 +16,13 @@ namespace Data_science_assignment
         /// </summary>
         private static void Main()
         {
-
             // Setup variables
             DataReader reader;
             Stopwatch stopwatch = new Stopwatch();
 
-            if (Utils.AskQuestion("Choose dataset size: [S/l]") == "l")
+            // Let user choose the dataset (right now just movielens or useritem)
+            string datasetSize = Utils.AskQuestion("Choose dataset size: [S/l]");
+            if (datasetSize == "l")
             {
                 stopwatch.Start();
                 reader = new DataReader(@"../../assets/movielens.data", new[] { '\t' });
@@ -37,7 +34,6 @@ namespace Data_science_assignment
             }
 
             PreferenceLoader loader = new PreferenceLoader(reader);
-
             List<UserPreference> preferences = loader.LoadPreferences();
             int[] uniqueUsers = loader.GetUniqueUsers();
             int[] uniqueArticles = loader.GetUniqueArticles();
@@ -87,7 +83,9 @@ namespace Data_science_assignment
                         break;
                     case "slopeone":
                         SlopeOne slopeOne = new SlopeOne(dataAwareAlgorithm);
-                        slopeOne.PrintDeviations();
+
+                        if (datasetSize != "l") slopeOne.PrintDeviations();
+
                         HandleRatingPredictableResponse(slopeOne);
                         break;
                 }
@@ -162,8 +160,7 @@ namespace Data_science_assignment
                     {
                         AlgorithmContext context = new AlgorithmContext(strategy, userToRate, preference);
 
-                        Console.WriteLine(
-                            $"The {choice} similarity between UID {userToRate.userId} and {preference.userId} is: {context.ExecuteStrategy()} ");
+                        Console.WriteLine($"The {choice} similarity between UID {userToRate.userId} and {preference.userId} is: {context.ExecuteStrategy()} ");
                     }
                 }
             }
