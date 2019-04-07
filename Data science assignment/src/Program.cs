@@ -71,43 +71,18 @@ namespace Data_science_assignment
                         HandleStrategyResponse(new EuclideanStrategy());
                         break;
                     case "adjcosine":
-                        HandleAdjCosine(new AdjustedCosine(dataAwareAlgorithm));
+                        HandleRatingPredictableResponse(new AdjustedCosine(dataAwareAlgorithm));
                         break;
                     case "slopeone":
-                        HandleSlopeOne(new SlopeOne(dataAwareAlgorithm));
+                        SlopeOne slopeOne = new SlopeOne(dataAwareAlgorithm);
+                        slopeOne.PrintDeviations();
+                        HandleRatingPredictableResponse(slopeOne);
                         break;
                 }
             }
             while (choice != "exit");
 
-            void HandleSlopeOne(SlopeOne slopeOne)
-            {
-                slopeOne.PrintDeviations();
-
-                string uidResponse = Utils.AskQuestion(
-                    $"Please enter the userID you want to predict the rating for. Should be one of: " +
-                    $"{string.Join(", ", uniqueUsers)}");
-
-                UserPreference userToRate;
-                try
-                {
-                    int uid = Convert.ToInt32(uidResponse);
-                    userToRate = preferences[uid - 1];
-                }
-                catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is FormatException)
-                {
-                    Console.WriteLine("That is not a valid response, please try again.");
-                    return;
-                }
-
-                // For every item the user has not rated yet
-                foreach (int pid in loader.getUnratedItems(userToRate).Keys)
-                {
-                    Console.WriteLine($"Predicted rating for item {pid} is: {slopeOne.PredictRating(userToRate, pid)}");
-                }
-            }
-
-            void HandleAdjCosine(AdjustedCosine adjCosine)
+            void HandleRatingPredictableResponse(IRatingPredictable predictable)
             {
                 string uidResponse = Utils.AskQuestion(
                     $"Please enter the userID you want to predict the rating for. Should be one of: " +
@@ -128,7 +103,7 @@ namespace Data_science_assignment
                 // For every item the user has not rated yet
                 foreach (int pid in loader.getUnratedItems(userToRate).Keys)
                 {
-                    Console.WriteLine($"Predicted rating for item {pid} is: {adjCosine.PredictRating(userToRate, pid)}");
+                    Console.WriteLine($"Predicted rating for item {pid} is: {predictable.PredictRating(userToRate, pid)}");
                 }
             }
 

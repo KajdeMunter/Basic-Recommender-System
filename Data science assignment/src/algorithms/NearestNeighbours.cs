@@ -65,7 +65,7 @@ namespace Data_science_assignment.src.algorithms
                             .Exists(article => !targetwithoutzeroratings.ContainsKey(article)))
                     {
 
-                        // If the list of neighbours is not full yet
+                        // If the list of neighbours is not full yet and the similarity is not already in the list
                         if (listcnt < k)
                         {
                             // insert userId and its similarity

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data_science_assignment.src.algorithms
 {
-    class AdjustedCosine
+    class AdjustedCosine : IRatingPredictable
     {
         private readonly DataAwareAlgorithm _data;
 

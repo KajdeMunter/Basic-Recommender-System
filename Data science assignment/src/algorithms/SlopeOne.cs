@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Data_science_assignment.src.algorithms
 {
-    class SlopeOne
+    class SlopeOne : IRatingPredictable
     {
         private readonly DataAwareAlgorithm _data;
 
@@ -76,12 +76,7 @@ namespace Data_science_assignment.src.algorithms
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="i"></param>
-        /// <returns></returns>
+        /// <inheritdoc cref="IRatingPredictable"/>
         public double PredictRating(UserPreference target, int i)
         {
             double numerator = 0;
