@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Data_science_assignment.src;
@@ -22,14 +23,17 @@ namespace Data_science_assignment
 
             // Setup variables
             DataReader reader;
+            Stopwatch stopwatch = new Stopwatch();
 
-            if (Utils.AskQuestion("Choose dataset size: [S/L]") == "s")
+            if (Utils.AskQuestion("Choose dataset size: [S/l]") == "l")
             {
-                reader = new DataReader(@"../../assets/userItem.data", new[] {','});
+                stopwatch.Start();
+                reader = new DataReader(@"../../assets/movielens.data", new[] { '\t' });
             }
             else
             {
-                reader = new DataReader(@"../../assets/movielens.data", new[] {'\t'});
+                stopwatch.Start();
+                reader = new DataReader(@"../../assets/userItem.data", new[] { ',' });
             }
 
             PreferenceLoader loader = new PreferenceLoader(reader);
@@ -38,6 +42,10 @@ namespace Data_science_assignment
             int[] uniqueUsers = loader.GetUniqueUsers();
             int[] uniqueArticles = loader.GetUniqueArticles();
             DataAwareAlgorithm dataAwareAlgorithm = new DataAwareAlgorithm(preferences, uniqueUsers, uniqueArticles, loader);
+
+            stopwatch.Stop();
+            Console.WriteLine($"Loaded all data in {stopwatch.Elapsed}");
+            stopwatch.Reset();
 
             string q = "What do you want to do? [getAllRatings|Sparcity|Manhattan|Cosine|Pearson|Euclidean|AdjCosine|SlopeOne|Exit]";
             string choice;
@@ -53,7 +61,11 @@ namespace Data_science_assignment
                         Utils.PrintRatings(uniqueArticles, uniqueUsers, preferences);
                         break;
                     case "sparcity":
+                        stopwatch.Start();
                         Console.WriteLine($"The sparcity is: {Utils.ComputeSparcity(preferences, uniqueUsers, uniqueArticles, loader)}");
+                        stopwatch.Stop();
+
+                        Console.WriteLine($"Calculated sparcity in {stopwatch.ElapsedMilliseconds}ms");
                         break;
                     case "manhattan":
                         HandleStrategyResponse(new ManhattanStrategy());
@@ -100,11 +112,16 @@ namespace Data_science_assignment
                     return;
                 }
 
+                stopwatch.Start();
                 // For every item the user has not rated yet
                 foreach (int pid in loader.getUnratedItems(userToRate).Keys)
                 {
                     Console.WriteLine($"Predicted rating for item {pid} is: {predictable.PredictRating(userToRate, pid)}");
                 }
+
+                stopwatch.Stop();
+                Console.WriteLine($"Predicted all ratings in {stopwatch.ElapsedMilliseconds}ms");
+                stopwatch.Reset();
             }
 
             // Asks for a userId and executes the given strategy on that user and all other preferences
@@ -131,7 +148,12 @@ namespace Data_science_assignment
                     NearestNeighbours nearestNeighbours = new NearestNeighbours(dataAwareAlgorithm);
                     PredictRating predictRating = new PredictRating(dataAwareAlgorithm);
 
-                    predictRating.Calculate(nearestNeighbours.Calculate(userToRate, strategy).Reverse().ToDictionary(kvp => kvp.Key, kvp => kvp.Value), userToRate);
+                    stopwatch.Start();
+                    predictRating.Calculate(nearestNeighbours.Calculate(userToRate, strategy), userToRate);
+                    stopwatch.Stop();
+
+                    Console.WriteLine($"Predicted all ratings in {stopwatch.ElapsedMilliseconds}ms");
+                    stopwatch.Reset();
                 }
                 else
                 { 

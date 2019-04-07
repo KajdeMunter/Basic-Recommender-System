@@ -22,7 +22,7 @@ namespace Data_science_assignment.src.algorithms
         /// <param name="userToRate"></param>
         /// <param name="strategy"></param>
         /// <returns></returns>
-        public SortedDictionary<double, UserPreference> Calculate(UserPreference userToRate, IStrategy strategy)
+        public List<Tuple<double, UserPreference>> Calculate(UserPreference userToRate, IStrategy strategy)
         {
             string thresholdResponse = Utils.AskQuestion("Please enter a threshold: ");
 
@@ -39,13 +39,13 @@ namespace Data_science_assignment.src.algorithms
             catch (FormatException)
             {
                 Console.WriteLine("That is not a valid response. please try again.");
-                return new SortedDictionary<double, UserPreference>();
+                return new List<Tuple<double, UserPreference>>();
             }
 
             int listcnt = 0;
 
             // Create a result list with <similarity, UserPreference>
-            SortedDictionary<double, UserPreference> result = new SortedDictionary<double, UserPreference>();
+            List<Tuple<double, UserPreference>> result = new List<Tuple<double, UserPreference>>();
 
             // Remove unrated items from target
             Dictionary<int, float> targetwithoutzeroratings = _data.loader.getRatingsWithoutZero(userToRate);
@@ -69,37 +69,38 @@ namespace Data_science_assignment.src.algorithms
                         if (listcnt < k)
                         {
                             // insert userId and its similarity
-                            result.Add(sim, preference);
+                            result.Add(new Tuple<double, UserPreference>(sim, preference));
                             ++listcnt;
                         }
                         // Else if the list is already full But similarity is greater than the lowest similarity in the list
                         else
                         {
-                            KeyValuePair<double, UserPreference> lowestSimilarityUser = result.First();
+                            result = result.OrderBy(t => t.Item1).ToList();
+                            Tuple<double, UserPreference> lowestSimilarityUser = result.First();
 
-                            double lowestSimilarity = lowestSimilarityUser.Key;
+                            double lowestSimilarity = lowestSimilarityUser.Item1;
 
                             if (sim > lowestSimilarity)
                             {
                                 // Replace the neighbour associated to such lowest similarity with userId
-                                result.Remove(lowestSimilarityUser.Key);
-                                result.Add(sim, preference);
+                                result.Remove(lowestSimilarityUser);
+                                result.Add(new Tuple<double, UserPreference>(sim, preference));
                             }
                         }
                         // If the neighbours list is full, update the value of the threshold
                         if (listcnt >= k)
                         {
                             // the new threshold is the lowest neighbour similarity
-                            threshold = result.Min(t => t.Key);
+                            threshold = result.Min(t => t.Item1);
                         }
                     }
                 }
             }
 
             Console.WriteLine($"The nearest neighbours for UID {userToRate.userId} are: ");
-            foreach (KeyValuePair<double, UserPreference> neighbour in result.Reverse())
+            foreach (Tuple<double, UserPreference> neighbour in result.OrderBy(t => t.Item2.userId))
             {
-                Console.WriteLine($"UID {neighbour.Value.userId} with similarity {neighbour.Key}");
+                Console.WriteLine($"UID {neighbour.Item2.userId} with similarity {neighbour.Item1}");
             }
 
             return result;

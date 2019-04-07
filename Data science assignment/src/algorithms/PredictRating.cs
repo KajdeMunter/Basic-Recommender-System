@@ -20,24 +20,24 @@ namespace Data_science_assignment.src.algorithms
         /// </summary>
         /// <param name="neighbours"></param>
         /// <param name="targetUser"></param>
-        public void Calculate(Dictionary<double, UserPreference> neighbours, UserPreference targetUser)
+        public void Calculate(List<Tuple<double, UserPreference>> neighbours, UserPreference targetUser)
         {
             double numerator = 0.0;
             double denominator = 0.0;
 
             List<UserPreference> neighbourPreferences = new List<UserPreference>();
 
-            foreach (UserPreference pref in neighbours.Values)
+            foreach (Tuple<double, UserPreference> tuple in neighbours)
             {
-                neighbourPreferences.Add(pref);
+                neighbourPreferences.Add(tuple.Item2);
             }
 
             // Get the products all neighbours have rated
             HashSet<int> targetHashSet = new HashSet<int>(_data.loader.getRatingsWithoutZero(neighbourPreferences.First()).Keys);
 
-            foreach (UserPreference neighbourPreference in neighbours.Values.Skip(1))
+            foreach (Tuple<double, UserPreference> neighbourPreference in neighbours.Skip(1))
             {
-                targetHashSet.IntersectWith(_data.loader.getRatingsWithoutZero(neighbourPreference).Keys);
+                targetHashSet.IntersectWith(_data.loader.getRatingsWithoutZero(neighbourPreference.Item2).Keys);
             }
 
             List<int> productsInCommon = targetHashSet.ToList();
@@ -51,12 +51,10 @@ namespace Data_science_assignment.src.algorithms
             // Predict rating
             foreach (int pid in productsInCommon)
             {
-                double res = 0.0;
-
-                foreach (KeyValuePair<double, UserPreference> kvp in neighbours)
+                foreach (Tuple<double, UserPreference> kvp in neighbours)
                 {
-                    numerator += (kvp.Key * kvp.Value.ratings[pid]);
-                    denominator += kvp.Key;
+                    numerator += (kvp.Item1 * kvp.Item2.ratings[pid]);
+                    denominator += kvp.Item1;
                 }
 
                 Console.WriteLine($"Predicted rating for {pid} is {numerator / denominator}");
