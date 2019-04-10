@@ -41,7 +41,8 @@ namespace Data_science_assignment.src.algorithms
             }
 
             List<int> productsInCommon = targetHashSet.ToList();
-
+            
+            
             // Remove the products that the user has already rated so we have a list of products that we can predict
             foreach (int pid in _data.loader.getRatingsWithoutZero(targetUser).Keys)
             {

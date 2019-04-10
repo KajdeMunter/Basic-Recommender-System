@@ -12,20 +12,20 @@ namespace Data_science_assignment.src.algorithms
     class AlgorithmContext
     {
         private readonly IStrategy _strategy;
-        private readonly UserPreference _pref1;
-        private readonly UserPreference _pref2;
+        private readonly SortedDictionary<int, float> _pointP;
+        private readonly SortedDictionary<int, float> _pointQ;
 
         /// <summary>
         /// Context constructor
         /// </summary>
         /// <param name="strategy">IStrategy to execute on the preferences</param>
-        /// <param name="preference1">Preference to pass to the strategy</param>
-        /// <param name="preference2">Preference to pass to the strategy</param>
-        public AlgorithmContext(IStrategy strategy, UserPreference preference1, UserPreference preference2)
+        /// <param name="pointP">Preference to pass to the strategy</param>
+        /// <param name="pointQ">Preference to pass to the strategy</param>
+        public AlgorithmContext(IStrategy strategy, SortedDictionary<int, float> pointP, SortedDictionary<int, float> pointQ)
         {
             _strategy = strategy;
-            _pref1 = preference1;
-            _pref2 = preference2;
+            _pointP = pointP;
+            _pointQ = pointQ;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Data_science_assignment.src.algorithms
         /// <returns>Result of the strategy agains the two given preferences</returns>
         public double ExecuteStrategy()
         {
-            return _strategy.Execute(_pref1, _pref2);
+            return _strategy.Execute(_pointP, _pointQ);
         }
     }
 }

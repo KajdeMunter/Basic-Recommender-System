@@ -8,15 +8,15 @@ namespace Data_science_assignment.src.algorithms
 {
     class CosineStrategy : IStrategy
     {
-        public Double Execute(UserPreference pref1, UserPreference pref2)
+        public Double Execute(SortedDictionary<int, float> pointP, SortedDictionary<int, float> pointQ)
         {
             float sumOfXmultipliedByY = 0F;
             float sumOfSquaredX = 0F;
             float sumOfSquaredY = 0F;
 
-            foreach (KeyValuePair<int, float> kvprating1 in pref1.ratings)
+            foreach (KeyValuePair<int, float> kvprating1 in pointP)
             {
-                foreach (KeyValuePair<int, float> kvprating2 in pref2.ratings)
+                foreach (KeyValuePair<int, float> kvprating2 in pointQ)
                 {
                     sumOfXmultipliedByY += kvprating1.Value * kvprating2.Value;
                     sumOfSquaredX += (kvprating1.Value * kvprating1.Value);

@@ -158,7 +158,7 @@ namespace Data_science_assignment
                     // Show all users with their respective similarity to the target user
                     foreach (UserPreference preference in preferences)
                     {
-                        AlgorithmContext context = new AlgorithmContext(strategy, userToRate, preference);
+                        AlgorithmContext context = new AlgorithmContext(strategy, userToRate.ratings, preference.ratings);
 
                         Console.WriteLine($"The {choice} similarity between UID {userToRate.userId} and {preference.userId} is: {context.ExecuteStrategy()} ");
                     }

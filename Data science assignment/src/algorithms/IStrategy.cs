@@ -11,6 +11,12 @@ namespace Data_science_assignment.src.algorithms
     /// </summary>
     interface IStrategy
     {
-        Double Execute(UserPreference pref1, UserPreference pref2);
+        /// <summary>
+        /// Takes 2 dicts containing a product id and rating and executes the strategy
+        /// </summary>
+        /// <param name="pointP"></param>
+        /// <param name="pointQ"></param>
+        /// <returns></returns>
+        Double Execute(SortedDictionary<int, float> pointP, SortedDictionary<int, float> pointQ);
     }
 }

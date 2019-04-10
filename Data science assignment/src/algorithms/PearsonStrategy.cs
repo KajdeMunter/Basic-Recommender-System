@@ -8,7 +8,7 @@ namespace Data_science_assignment.src.algorithms
 {
     class PearsonStrategy : IStrategy
     {
-        public Double Execute(UserPreference pref1, UserPreference pref2)
+        public Double Execute(SortedDictionary<int, float> pointP, SortedDictionary<int, float> pointQ)
         {
             Double productSum = 0.0;
             Double xSum = 0.0;
@@ -17,9 +17,9 @@ namespace Data_science_assignment.src.algorithms
             Double ySqr = 0.0;
             int n = 0;
 
-            foreach (KeyValuePair<int, float> kvprating1 in pref1.ratings)
+            foreach (KeyValuePair<int, float> kvprating1 in pointP)
             {
-                foreach (KeyValuePair<int, float> kvprating2 in pref2.ratings)
+                foreach (KeyValuePair<int, float> kvprating2 in pointQ)
                 {
                     if (kvprating1.Key == kvprating2.Key && kvprating1.Value > 0 && kvprating2.Value > 0)
                     {
@@ -29,7 +29,7 @@ namespace Data_science_assignment.src.algorithms
                         ySum += kvprating2.Value;
                         xSqr += Math.Pow(kvprating1.Value, 2);
                         ySqr += Math.Pow(kvprating2.Value, 2);
-                        n += 1;  
+                        n += 1; 
                     }
                 }
             }

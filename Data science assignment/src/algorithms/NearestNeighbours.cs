@@ -55,7 +55,7 @@ namespace Data_science_assignment.src.algorithms
                 // Don't include user to rate
                 if (preference.userId != userToRate.userId)
                 {
-                    double sim = new AlgorithmContext(strategy, userToRate, preference).ExecuteStrategy();
+                    double sim = new AlgorithmContext(strategy, userToRate.ratings, preference.ratings).ExecuteStrategy();
 
                     // Remove unrated items from preference
                     Dictionary<int, float> prefwithoutzeroratings = _data.loader.getRatingsWithoutZero(preference);
