@@ -12,7 +12,7 @@ namespace Data_science_assignment.src.algorithms
 
         public PredictRating(DataAwareAlgorithm data)
         {
-            this._data = data;
+            _data = data;
         }
 
         /// <summary>
@@ -21,9 +21,7 @@ namespace Data_science_assignment.src.algorithms
         /// <param name="neighbours"></param>
         /// <param name="targetUser"></param>
         public void Calculate(List<Tuple<double, UserPreference>> neighbours, UserPreference targetUser)
-        {
-
-
+        { 
             List<int> productsToRate = new List<int>();
 
             // Add products that neighbours have rated
@@ -49,6 +47,7 @@ namespace Data_science_assignment.src.algorithms
 
                 foreach (Tuple<double, UserPreference> kvp in neighbours)
                 {
+                    // Use only the users that rated the product
                     if (_data.loader.getRatingsWithoutZero(kvp.Item2).ContainsKey(pid))
                     {
                         numerator += kvp.Item1 * _data.loader.getRatingsWithoutZero(kvp.Item2)[pid];

@@ -28,7 +28,7 @@ namespace Data_science_assignment.src.algorithms
         /// <returns>a tuple containing the deviation for 2 products and howManyUsers</returns>
         public Tuple<float,int> GetDeviation(int i, int j)
         {
-            float Currdev = 0;
+            float currdev = 0;
             int usercnt = 0;
 
             // Foreach user u who rated both items i and j
@@ -38,13 +38,13 @@ namespace Data_science_assignment.src.algorithms
 
                 if (pref.ContainsKey(i) && pref.ContainsKey(j))
                 {
-                    Currdev += pref[i] - pref[j];
+                    currdev += pref[i] - pref[j];
                     usercnt++;
                 }
             }
 
             // Currdev / (How many users rated both I and J)
-            float dev = Currdev / usercnt;
+            float dev = currdev / usercnt;
 
             return new Tuple<float, int>(dev, usercnt);
         }

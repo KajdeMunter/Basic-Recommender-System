@@ -13,7 +13,7 @@ namespace Data_science_assignment.src.algorithms
 
         public NearestNeighbours(DataAwareAlgorithm data)
         {
-            this._data = data;
+            _data = data;
         }
 
         /// <summary>
